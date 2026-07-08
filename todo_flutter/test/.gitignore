@@ -1,0 +1,9 @@
+# Node
+todo-backend/node_modules/
+todo-backend/.env
+
+# Flutter
+todo_flutter/build/
+todo_flutter/.dart_tool/
+todo_flutter/android/.gradle/
+todo_flutter/ios/Pods/
