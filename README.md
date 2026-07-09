@@ -1,13 +1,14 @@
 # Todo App
 
-Full-stack Todo application - Flutter frontend + Node.js/Express backend with MySQL.
+Full-stack Todo application - Flutter mobile app, a plain HTML/CSS/JS web app, and a Node.js/Express + MySQL backend shared by both.
 
 ## Project Structure
 
 ```
 .
 ├── todo_backend/     # Node.js + Express + MySQL API
-└── todo_flutter/     # Flutter mobile app
+├── todo_flutter/     # Flutter mobile app
+└── web_project/      # HTML + CSS + JS web version 
 ```
 
 ## Features
@@ -21,13 +22,14 @@ Full-stack Todo application - Flutter frontend + Node.js/Express backend with My
 - Search and filter (status + category)
 - Dark mode
 - Animated UI (task add/complete transitions, swipe to delete)
+- Same features available on mobile (Flutter) and web (HTML/CSS/JS)
 
 ## Prerequisites
 
 - [Node.js](https://nodejs.org) (LTS version)
 - [MySQL](https://dev.mysql.com/downloads/installer/) (or MySQL Workbench / XAMPP)
-- [Flutter SDK](https://docs.flutter.dev/get-started/install)
-- Android Studio / Xcode (for emulator/simulator) or a physical device
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) (only needed for the mobile app)
+- Android Studio / Xcode (for emulator/simulator) or a physical device (only needed for the mobile app)
 
 ---
 
@@ -35,12 +37,6 @@ Full-stack Todo application - Flutter frontend + Node.js/Express backend with My
 
 Create the database and tables by running the schema below.
 
-**Option A - Command line:**
-```bash
-mysql -u root -p < todo-backend/schema.sql
-```
-
-**Option B - MySQL Workbench:**
 1. Open MySQL Workbench and connect to your local instance
 2. Open a new SQL tab (`Ctrl+T`)
 3. Paste the schema below
@@ -114,6 +110,8 @@ Verify it's working - open `http://localhost:5000` in a browser, you should see:
 {"message":"Todo API is running"}
 ```
 
+Keep this terminal running - both the Flutter app and the web app need the backend to be live.
+
 ---
 
 ## 3. Flutter App Setup
@@ -150,14 +148,33 @@ flutter run
 
 ---
 
+## 4. Web App Setup
+
+The web version is plain HTML/CSS/JS - no build step needed.
+
+1. Make sure the backend is running (`http://localhost:5000`).
+2. Open `web_project/login.html` directly in your browser, **or** serve the folder with a local server (recommended):
+   ```bash
+   cd web_project
+   npx serve .
+   ```
+   Then visit the printed URL (e.g. `http://localhost:3000/login.html`).
+
+The web app uses `http://localhost:5000/api` as its base URL (set in `web_project/js/api.js`), since the browser and backend run on the same machine. Update it there if you ever deploy the backend elsewhere.
+
+---
+
 ## Troubleshooting
 
 | Problem | Fix |
 |---|---|
-| `Cannot find module 'xyz'` | Run `npm install` inside `todo-backend/` |
-| `Connection refused` in Flutter | Wrong `baseUrl` - check the table above |
+| `Cannot find module 'xyz'` | Run `npm install` inside `todo_backend/` |
+| `Connection refused` in Flutter | Wrong `baseUrl` - check the table in step 3 |
 | `ER_ACCESS_DENIED_ERROR` from MySQL | Check `DB_USER` / `DB_PASSWORD` in `.env` |
 | Backend won't start, port in use | Change `PORT` in `.env` to something else (e.g. `5001`) |
+| Web app shows blank task list / errors in console | Make sure the backend is running and the browser isn't blocking `http://localhost:5000` (check DevTools console for CORS errors) |
+| Flutter build fails with `Could not close incremental caches` / `this and base files have different roots` (Windows) | Kotlin's incremental compiler breaks when the project and Flutter's pub cache are on different drives. Add `kotlin.incremental=false` to `todo_flutter/android/gradle.properties`, then run `flutter clean` and `flutter run` again |
+| Flutter build fails to delete `.dart_tool` / file in use | Close Android Studio/VS Code and any running `flutter run` sessions, then run `flutter clean` again |
 
 ---
 
