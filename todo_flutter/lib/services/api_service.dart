@@ -4,10 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/task.dart';
 
 class ApiService {
-  // Android emulator eken run karanawa nam 10.0.2.2 use karanna (localhost wenuwata)
-  // Real device eken test karanawa nam computer eke local IP eka danna, e.g. http://192.168.1.5:5000
-  // iOS simulator eken nam localhost eka hariyata work karayi
-  static const String baseUrl = 'http://10.0.2.2:5000/api';
+
+  static const String baseUrl = 'http://192.168.1.236:5000/api';
 
   // ---------- Token storage ----------
   static Future<void> saveToken(String token) async {
