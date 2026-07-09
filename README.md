@@ -6,7 +6,7 @@ Full-stack Todo application - Flutter frontend + Node.js/Express backend with My
 
 ```
 .
-├── todo-backend/     # Node.js + Express + MySQL API
+├── todo_backend/     # Node.js + Express + MySQL API
 └── todo_flutter/     # Flutter mobile app
 ```
 
@@ -79,7 +79,7 @@ Confirm it worked - in Workbench, refresh the **SCHEMAS** panel and check `todo_
 ## 2. Backend Setup
 
 ```bash
-cd todo-backend
+cd todo_backend
 npm install
 ```
 
