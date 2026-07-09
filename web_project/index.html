@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Tasks</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>My Tasks</h1>
+    <div>
+      <button class="icon-btn" id="themeToggle" title="Toggle dark mode">🌙</button>
+      <button class="icon-btn" id="logoutBtn" title="Logout">⏻</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <input type="text" class="search-bar" id="searchInput" placeholder="Search tasks..." />
+
+    <div class="chip-row" id="statusChips">
+      <button class="chip active" data-status="all">All</button>
+      <button class="chip" data-status="pending">Pending</button>
+      <button class="chip" data-status="completed">Completed</button>
+    </div>
+
+    <div class="chip-row" id="categoryChips"></div>
+
+    <div class="summary-card">
+      <div class="progress-ring">
+        <svg width="64" height="64" viewBox="0 0 64 64">
+          <circle class="ring-bg" cx="32" cy="32" r="26"></circle>
+          <circle class="ring-fg" id="ringFg" cx="32" cy="32" r="26"
+                   stroke-dasharray="163.36" stroke-dashoffset="163.36"></circle>
+        </svg>
+        <div class="ring-label" id="ringLabel">0%</div>
+      </div>
+      <div class="summary-stats">
+        <div class="summary-stat">
+          <div class="value" id="totalCount">0</div>
+          <div class="label">Total</div>
+        </div>
+        <div class="summary-stat">
+          <div class="value" id="pendingCount">0</div>
+          <div class="label">Pending</div>
+        </div>
+        <div class="summary-stat">
+          <div class="value" id="doneCount">0</div>
+          <div class="label">Done</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="taskList"></div>
+  </main>
+
+  <button class="fab" id="addTaskBtn">+ New Task</button>
+
+  <!-- Add/Edit Task Modal -->
+  <div class="modal-overlay" id="taskModalOverlay">
+    <div class="modal">
+      <h2 id="modalTitle">New Task</h2>
+
+      <div class="field">
+        <label for="taskTitle">Title</label>
+        <input type="text" id="taskTitle" placeholder="What needs to be done?" />
+      </div>
+
+      <div class="field">
+        <label>Priority</label>
+        <div class="priority-options">
+          <div class="priority-option" data-priority="low">Low</div>
+          <div class="priority-option active" data-priority="medium">Medium</div>
+          <div class="priority-option" data-priority="high">High</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="taskCategory">Category</label>
+        <input type="text" id="taskCategory" placeholder="e.g. Work, Personal" />
+        <div class="category-suggestions" id="categorySuggestions"></div>
+      </div>
+
+      <div class="field">
+        <label for="taskDueDate">Due Date</label>
+        <div class="date-row">
+          <input type="date" id="taskDueDate" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="taskNotes">Notes (optional)</label>
+        <textarea id="taskNotes" rows="3" placeholder="Any extra details..."></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn secondary" id="cancelModalBtn">Cancel</button>
+        <button class="btn" id="saveTaskBtn">Add Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirm Modal -->
+  <div class="modal-overlay" id="deleteModalOverlay">
+    <div class="modal" style="max-width: 360px;">
+      <h2>Delete task?</h2>
+      <p id="deleteMessage" style="color: var(--text-secondary); font-size: 14px;"></p>
+      <div class="modal-actions">
+        <button class="btn secondary" id="cancelDeleteBtn">Cancel</button>
+        <button class="btn danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
