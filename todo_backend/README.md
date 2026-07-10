@@ -1,70 +1,284 @@
 # Simple Todo App - Node.js Backend (MySQL)
 
-Flutter + Node.js practice project ekak wenuwen hadapu simple backend eka. Data store karanna MySQL use karanawa.
+This is a simple backend created for a Flutter + Node.js practice project. MySQL is used to store the data.
 
-## Setup
+---
 
-### 1. MySQL install karanna (nathinam)
-Computer eke MySQL nathi nam install karanna - Windows eken [MySQL Installer](https://dev.mysql.com/downloads/installer/) or XAMPP use karanna puluwan. Mac eken `brew install mysql`.
+## Prerequisites
 
-### 2. Database + tables hadanna
-`schema.sql` file eka run karanna:
+Before running the project, install the following:
+
+- Node.js (v18 or later recommended)
+- MySQL Server
+- MySQL Workbench (optional but recommended)
+
+---
+
+## Step 1 - Install MySQL
+
+### Windows
+1. Download **MySQL Installer** from the official MySQL website.
+2. Run the installer.
+3. Select **Developer Default**.
+4. Continue with the installation.
+5. Set a password for the `root` user when prompted.
+6. Finish the installation.
+
+### Mac
+```bash
+brew install mysql
+brew services start mysql
+```
+
+### Alternative (Windows)
+You can also install **XAMPP** and use the MySQL server included with it.
+
+---
+
+## Step 2 - Install MySQL Workbench
+
+1. Download **MySQL Workbench** from the official MySQL website.
+2. Run the installer.
+3. Select **MySQL Workbench**.
+4. Click **Next** and complete the installation.
+5. Open MySQL Workbench.
+6. Create a connection using:
+   - Hostname: `localhost`
+   - Port: `3306`
+   - User: `root`
+   - Password: the password you set during MySQL installation
+
+---
+
+## Step 3 - Create the Database and Tables
+
+Run the `schema.sql` file.
+
+### Using Command Line
 ```bash
 mysql -u root -p < schema.sql
 ```
-(Password ekak nathi nam `-p` eka danna epa). Meken `todo_app` database eka + `users`, `tasks` tables hadenawa.
 
-Terminal eken karanna amaaru nam, MySQL Workbench / phpMyAdmin eke `schema.sql` eke content eka copy-paste karala run karanna puluwan.
+If you do not have a password for MySQL, remove `-p`.
 
-### 3. `.env` file eka update karanna
-```
+### Using MySQL Workbench
+1. Open MySQL Workbench.
+2. Open the `schema.sql` file.
+3. Copy all the SQL code.
+4. Paste it into a new SQL tab.
+5. Click the **Execute (lightning icon)** button.
+
+This will create:
+- `todo_app` database
+- `users` table
+- `tasks` table
+
+---
+
+## Step 4 - Configure Environment Variables
+
+Create a `.env` file in the project root and add:
+
+```env
+PORT=5000
+
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
-DB_PASSWORD=<oyage mysql password eka danna>
+DB_PASSWORD=your_mysql_password
 DB_NAME=todo_app
+
+JWT_SECRET=your_jwt_secret_key
 ```
 
-### 4. Dependencies install + run
+Replace `your_mysql_password` with your actual MySQL password.
+
+---
+
+## Step 5 - Install Dependencies
+
 ```bash
 npm install
+```
+
+---
+
+## Step 6 - Run the Server
+
+```bash
 npm start
 ```
 
-Server eka run wenne `http://localhost:5000` walata (`.env` file eke `PORT` change karanna puluwan).
+The server will run at:
 
-## API Endpoints
+```
+http://localhost:5000
+```
 
-### Auth
-| Method | Endpoint             | Body                                  | Description        |
-|--------|----------------------|----------------------------------------|---------------------|
-| POST   | /api/auth/register    | `{ name, email, password }`           | New user hadanawa   |
-| POST   | /api/auth/login       | `{ email, password }`                 | Login + token eka   |
+---
 
-Response eken `token` eka enawa - ithuru requests walata `Authorization: Bearer <token>` header eka widihata use karanna.
+# API Endpoints
 
-### Tasks (all protected - token eka one)
-| Method | Endpoint          | Body                              | Description         |
-|--------|-------------------|-------------------------------------|----------------------|
-| GET    | /api/tasks        | -                                    | Task okkoma balanawa |
-| POST   | /api/tasks        | `{ title }`                        | Task ekak add karanawa |
-| PUT    | /api/tasks/:id    | `{ title?, completed? }`           | Task update karanawa |
-| DELETE | /api/tasks/:id    | -                                    | Task delete karanawa |
+## Authentication
 
-## Flutter walin call karanna hodadi
+### Register
+**POST** `/api/auth/register`
 
-`http` package eken:
+Request body:
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "123456"
+}
+```
+
+### Login
+**POST** `/api/auth/login`
+
+Request body:
+```json
+{
+  "email": "john@example.com",
+  "password": "123456"
+}
+```
+
+Response:
+```json
+{
+  "token": "JWT_TOKEN_HERE",
+  "user": {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com"
+  }
+}
+```
+
+Use the token in the `Authorization` header:
+
+```
+Authorization: Bearer JWT_TOKEN_HERE
+```
+
+---
+
+## Tasks (Protected Routes)
+
+### Get All Tasks
+**GET** `/api/tasks`
+
+### Create Task
+**POST** `/api/tasks`
+
+Request body:
+```json
+{
+  "title": "Learn Node.js"
+}
+```
+
+### Update Task
+**PUT** `/api/tasks/:id`
+
+Request body:
+```json
+{
+  "title": "Learn Node.js Backend",
+  "completed": true
+}
+```
+
+### Delete Task
+**DELETE** `/api/tasks/:id`
+
+---
+
+# Flutter Example
 
 ```dart
 final response = await http.post(
-  Uri.parse('http://10.0.2.2:5000/api/auth/login'), // Android emulator localhost
+  Uri.parse('http://10.0.2.2:5000/api/auth/login'),
   headers: {'Content-Type': 'application/json'},
-  body: jsonEncode({'email': email, 'password': password}),
+  body: jsonEncode({
+    'email': email,
+    'password': password,
+  }),
 );
 ```
 
-Real device eken test karanawa nam, `localhost` wenuwata computer eke local IP eka (e.g. `192.168.1.x`) use karanna.
+### For Android Emulator
+Use:
+```
+10.0.2.2
+```
 
-## Note
+### For a Real Device
+Use your computer's local IP address, for example:
+```
+http://192.168.1.236:5000
+```
 
-`node_modules` ekak upload karanna epa - `npm install` karaddi automatically hadenawa. Production project ekakadi `.env` file eka git eken exclude karanna (`.gitignore` eke already thiyenawa).
+Make sure both the phone and the computer are connected to the same Wi-Fi network.
+
+---
+
+# Project Structure
+
+```
+project-root/
+│
+├── .env
+├── package.json
+├── server.js
+├── schema.sql
+│
+├── config/
+│   └── db.js
+│
+├── routes/
+│   ├── auth.js
+│   └── tasks.js
+│
+├── middleware/
+│   └── authMiddleware.js
+│
+└── controllers/
+    ├── authController.js
+    └── taskController.js
+```
+
+---
+
+# Useful Commands
+
+Install dependencies:
+```bash
+npm install
+```
+
+Run server:
+```bash
+npm start
+```
+
+Run in development mode (with nodemon):
+```bash
+npm run dev
+```
+
+---
+
+# Notes
+
+- Do not upload the `node_modules` folder to GitHub.
+- Add `.env` to `.gitignore`.
+- Keep your database password and JWT secret private.
+- For production, use a strong `JWT_SECRET` and secure database credentials.
+
+---
+
+# Author
+
+Simple Flutter + Node.js + MySQL practice backend.
